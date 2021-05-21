@@ -59,7 +59,7 @@ exports.getQrCode = async (req, res) => {
         const url = user.qrcode;
         QRCode.toDataURL(url, function (err, data_url) {
             console.log(data_url);
-            res.status(200).send(data_url);
+            res.status(200).send({imageUrl :data_url});
         });
     } catch (e) {
         res.status(500).send(e);

@@ -1,12 +1,13 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const bodyParser = require('body-parser');
 // example to use router when required
 const router = require('./routes/user.route');
 dotenv.config();
 require('./db/db');
 const auth = require('./middleware/auth');
 const morgan = require('morgan');
+const cors = require('cors')
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,7 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({
     extended: true
 }));
-// app.use(auth);
+app.use(auth);
+app.use(cors());
 
 app.use("/api", router);
 
