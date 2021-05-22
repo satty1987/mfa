@@ -71,6 +71,8 @@ userSchema.methods.toJSON = function () {
     const userObject = user.toObject();
     delete userObject.password;
     delete userObject.tokens;
+    delete userObject.mfaSecret;
+    delete userObject.qrcode;
     return userObject;
 }
 
@@ -78,10 +80,12 @@ userSchema.methods.toJSON = function () {
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
     const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
-    const secret = Speakeasy.generateSecret({ length: 20 });
-    user.mfaSecret = secret.base32;
-    user.qrcode = secret.otpauth_url,
-        user.tokens = user.tokens.concat({ token });
+    if(!user.mfaSecret){
+        const secret = Speakeasy.generateSecret({ length: 20 });
+        user.mfaSecret = secret.base32;
+        user.qrcode = secret.otpauth_url;
+    }
+    user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
 }
