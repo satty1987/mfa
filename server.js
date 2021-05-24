@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 // example to use router when required
 const router = require('./routes/user.route');
-const path = require('path');
+const questionsRoute = require('./routes/questions.route');
 
 dotenv.config();
 require('./db/db');
@@ -24,6 +24,8 @@ app.use(cors());
 app.use(express.static('./dist'));
 
 app.use("/api", router);
+app.use("/api/v1", questionsRoute);
+
 
 app.get('/*', function (req, res) {
     res.sendFile(__dirname + '/dist/index.html');
